@@ -21,20 +21,18 @@ int main() {
     
     int fd = open("telephone", O_EXCL | O_RDWR | O_APPEND, 0644);
     int semID = semget(ftok("makefile", 22), 1, 0);
+    
+    int shmID = shmget(ftok("makefile", 22), sizeof(int), 0);
 
-    int shmID = shmget(ftok("makefile", 22), sizeof(int), IPC_EXCL);
-
-    int * shmVal;
-    shmat(shmID, shmVal, 0);
+    int * shmVal = shmat(shmID, 0, 0);
     
     struct sembuf sb;
-    sb.sem_num = 0;
+    sb.sem_num = 1;
     sb.sem_flg = SEM_UNDO;
     sb.sem_op = -1;
-
     semop(semID, &sb, 1);
 
-    lseek(fd, -*shmVal, SEEK_END);
+    lseek(fd, -1 * (*shmVal), SEEK_END);
     char lastLine[*shmVal];
     read(fd, lastLine, *shmVal);
     printf("Current Last Line: %s\n", lastLine);
@@ -47,14 +45,12 @@ int main() {
     char trimmedInput[strlen(input)];
     strcpy(trimmedInput, input);
 
-    //shmVal = sizeof(trimmedInput);
-    //setval sharedmem
-
     write(fd, trimmedInput, strlen(trimmedInput));
     close(fd);
 
     *shmVal = (int)sizeof(trimmedInput);
-
+    shmdt(shmVal);
+    
     sb.sem_op = 1;
     semop(semID, &sb, 1);
     

@@ -16,10 +16,7 @@ void display() {
   int f = open("telephone", O_RDONLY);
   char b[size];
   read(f, b, size);
-  int i;
-  for (i = 0; i < size; i++)
-    printf("%c", b[i]);
-  printf("\n");
+  printf("%s\n", b);
   close(f);
 }
 

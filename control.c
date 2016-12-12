@@ -34,7 +34,7 @@ int main(int argc, char * argv[]) {
     sd = shmget(key, sizeof(int), IPC_CREAT | IPC_EXCL | 0644);
     semid = semget(key, 1, IPC_CREAT | IPC_EXCL | 0644);
     semctl(semid, 0, SETVAL, 1);
-    open("telephone", O_CREAT | O_TRUNC, 0644);
+    int f = open("telephone", O_CREAT | O_TRUNC, 0644);
   }
   else if (strncmp(argv[1], "-r", strlen(argv[1])) == 0) {
     sd = shmget(key, sizeof(int), IPC_CREAT | 0644);

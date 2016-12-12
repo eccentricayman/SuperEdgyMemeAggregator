@@ -27,7 +27,7 @@ int main() {
     int * shmVal = shmat(shmID, 0, 0);
     
     struct sembuf sb;
-    sb.sem_num = 1;
+    sb.sem_num = 0;
     sb.sem_flg = SEM_UNDO;
     sb.sem_op = -1;
     semop(semID, &sb, 1);
